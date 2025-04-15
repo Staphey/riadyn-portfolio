@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riadyn Laquite - BSIT 2-C</title>
+    <meta name="description" content="Portfolio website of Riadyn Laquite, Web Developer">
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Configure Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e293b',
+                        accent: '#3f51b5',
+                        background: 'rgb(15 23 42)',
+                        foreground: 'rgb(241 245 249)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Custom styles -->
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-title {
+                @apply text-2xl font-bold mb-6 text-gray-800 dark:text-white border-b-2 border-primary pb-2 inline-block;
+            }
+            
+            .skill-badge {
+                @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-blue-600/10 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 border-blue-600/20 dark:border-blue-500/20 mr-2 mb-2 transition-colors hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white;
+            }
+            .nav-link {
+                @apply text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors;
+            }
+            .mouse-aura {
+                @apply fixed inset-0 pointer-events-none;
+                background-image: radial-gradient(
+                    circle at var(--mouse-x) var(--mouse-y),
+                    rgba(63, 81, 181, 0.3) 0%,
+                    rgba(63, 81, 181, 0.15) 30%,
+                    rgba(63, 81, 181, 0) 50%
+                );
+            }
+            
+            @media (hover: none) and (pointer: coarse) {
+                .mouse-aura {
+                    background-image: radial-gradient(
+                        circle at top left,
+                        rgba(63, 81, 181, 0.3) 0%,
+                        rgba(63, 81, 181, 0.15) 30%,
+                        rgba(63, 81, 181, 0) 50%
+                    );
+                }
+            }
+            .nav-indicator {
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 1rem;
+                height: 1px;
+                width: 2rem;
+                background-color: #64748b;
+                transition: all 0.15s ease-in-out;
+            }
+            .group:hover .nav-indicator,
+            .group:focus-within .nav-indicator {
+                width: 4rem;
+                height: 2px;
+                background-color: #0d1426;
+            }
+            .nav-indicator.active,
+            .group .nav-indicator.active {
+                width: 4rem;
+                height: 2px;
+                background-color: #0d1426;
+            }
+            .dark .group:hover .nav-indicator,
+            .dark .group:focus-within .nav-indicator {
+                background-color: #e2e8f0;
+            }
+            .dark .nav-indicator.active,
+            .dark .group .nav-indicator.active {
+                background-color: #e2e8f0;
+            }
+            .project-card {
+                @apply mb-4 border border-transparent rounded-lg transition-all duration-300;
+                @apply bg-transparent dark:bg-transparent;
+            }
+            .project-card:hover {
+                @apply shadow-lg dark:border-blue-900/50 dark:bg-slate-800/50 bg-slate-100/50 border-blue-200;
+                transform: translateY(-2px);
+            }
+            
+            /* Add education card styling with hover effects */
+            .education-card {
+                @apply relative rounded-lg p-6 transition-all duration-300 border border-transparent;
+                @apply bg-transparent dark:bg-transparent;
+            }
+            .education-card:hover {
+                @apply shadow-lg dark:border-blue-900/50 dark:bg-slate-800/50 bg-slate-100/50 border-blue-200;
+                transform: translateY(-2px);
+            }
+        }
+        
+        /* Loader styles */
+        #loader-overlay {
+            opacity: 1;
+            z-index: 9999;
+        }
+        
+        #greeting {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-background text-gray-800 dark:text-foreground font-sans">
+    <!-- Loader with greetings -->
+    <div id="loader-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-background transition-opacity duration-1000">
+        <div class="text-center">
+            <h2 id="greeting" class="text-4xl md:text-6xl font-bold text-primary transition-opacity duration-300"></h2>
+        </div>
+    </div>
+    
+    <!-- Mouse aura effect -->
+    <div id="aura" class="mouse-aura"></div>
+    
+    <div id="main-content" class="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0 opacity-0 transition-opacity duration-1000">
+        <div class="lg:flex lg:justify-between lg:gap-4">
+            <!-- Left sidebar / header -->
+            <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24 flex flex-col lg:gap-4">
+                <div class="flex flex-col gap-4 lg:pr-24 mt-6 lg:mt-0">
+                    <!-- Profile image -->
+                    <div class="w-full flex justify-center lg:justify-start">
+                    <div class="w-24 lg:w-36 h-auto rounded-full overflow-hidden border-2 border-primary bg-gray-100 dark:bg-gray-800">
+                        <img src="https://i.ibb.co/mr0JDQPQ/Screenshot-2025-04-15-224557.png" alt="Riadyn Laquite" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                    
+                    <!-- Name and title -->
+                    <h1 class="text-4xl font-bold text-center lg:text-start">
+                        Hi, I'm Riadyn Laquite 👋
+                    </h1>
+                    <h2 class="text-xl text-center lg:text-start">
+                        Web Developer & Designer
+                    </h2>
+                    
+                    <!-- Bio -->
+                    <p class="text-lg text-center lg:text-start text-gray-600 dark:text-gray-400">
+                        I build and have fun around exceptional and accessible digital experiences for the web.
+                        Passionate about creating intuitive interfaces and solving complex problems.
+                    </p>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden lg:flex">
+                    <ul class="flex flex-col w-max text-start gap-6 uppercase text-xs font-medium">
+                        <li class="group">
+                            <a href="#about" class="py-3">
+                                <span class="nav-indicator active"></span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-800 dark:text-gray-200">About</span>
+                            </a>
+                        </li>
+                        <li class="group">
+                            <a href="#education" class="py-3">
+                                <span class="nav-indicator"></span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">Education</span>
+                            </a>
+                        </li>
+                        <li class="group">
+                            <a href="#projects" class="py-3">
+                                <span class="nav-indicator"></span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">Projects</span>
+                            </a>
+                        </li>
+                        <li class="group">
+                            <a href="#skills" class="py-3">
+                                <span class="nav-indicator"></span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">Skills</span>
+                            </a>
+                        </li>
+                        <li class="group">
+                            <a href="#contact" class="py-3">
+                                <span class="nav-indicator"></span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">Contact</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Social links -->
+                <ul class="flex flex-row gap-4 mt-6 lg:mt-0 justify-center lg:justify-start">
+                    <li>
+                        <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary hover:border-primary dark:hover:border-primary transition-colors">
+                            <i class="fab fa-github text-lg"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary hover:border-primary dark:hover:border-primary transition-colors">
+                            <i class="fab fa-linkedin-in text-lg"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://facebook.com/yourusername" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary hover:border-primary dark:hover:border-primary transition-colors">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- Updated theme toggle button -->
+                        <label id="theme-toggle" class="relative inline-flex items-center cursor-pointer">
+                          <input class="sr-only peer" value="" type="checkbox" />
+                          <div
+                            class="w-24 h-12 rounded-full ring-0 peer duration-500 outline-none bg-gray-200 overflow-hidden before:flex before:items-center before:justify-center after:flex after:items-center after:justify-center before:content-['☀️'] before:absolute before:h-10 before:w-10 before:top-1/2 before:bg-white before:rounded-full before:left-1 before:-translate-y-1/2 before:transition-all before:duration-700 peer-checked:before:opacity-0 peer-checked:before:rotate-90 peer-checked:before:-translate-y-full shadow-lg shadow-gray-400 peer-checked:shadow-lg peer-checked:shadow-gray-700 peer-checked:bg-[#383838] after:content-['🌑'] after:absolute after:bg-[#1d1d1d] after:rounded-full after:top-[4px] after:right-1 after:translate-y-full after:w-10 after:h-10 after:opacity-0 after:transition-all after:duration-700 peer-checked:after:opacity-100 peer-checked:after:rotate-180 peer-checked:after:translate-y-0"
+                          ></div>
+                        </label>
+                    </li>
+                </ul>
+            </header>
+            
+            <!-- Main content -->
+            <main class="flex flex-col pt-6 lg:pt-24 lg:w-1/2 lg:py-24 gap-8">
+                <!-- About Section -->
+                <section id="about" class="scroll-mt-16">
+                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-background/80 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+                        <h2 class="text-sm font-bold uppercase tracking-widest lg:sr-only">
+                            About
+                        </h2>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <p class="text-start text-gray-600 dark:text-gray-400 lg:px-6">
+                            Throughout my journey in web development, I've been guided by a
+                            simple belief:
+                            <span class="text-gray-900 dark:text-white">
+                                technology should feel natural and intuitive.
+                            </span>
+                            I focus on creating user experiences that make complex ideas accessible.
+                        </p>
+                        <p class="text-start text-gray-600 dark:text-gray-400 lg:px-6">
+                            Currently, I'm a second-year BS Information Technology (BSIT). I’m passionate about technology and enjoy bringing ideas to life through application 
+                            development and design. I have hands-on experience developing applications using C#, 
+                            and I also love working on web development projects that focus on both functionality and 
+                            user experience.
+                        </p>
+                        <p class="text-start text-gray-600 dark:text-gray-400 lg:px-6">
+                            When I'm not coding, you can find me playing, reading, or experimenting with
+                            new technologies. I believe in continuous learning and sharing knowledge with
+                            the community.
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- Education Section -->
+                <section id="education" class="scroll-mt-16 lg:mt-16">
+                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-background/80 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+                        <h2 class="text-sm font-bold uppercase tracking-widest lg:sr-only">
+                            Education
+                        </h2>
+                    </div>
+                    <div class="flex flex-col gap-6">
+                        <!-- Education 1 -->
+                        <div class="education-card">
+                            <div class="flex flex-col gap-4">
+                                <span class="text-sm text-gray-400 dark:text-gray-500">August 2022 — Present</span>
+                                <h3 class="text-lg font-bold text-primary">A College Student at Ateneo de Davao University</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    College life as a BSIT student has been a challenging yet rewarding journey. From learning various programming languages to understanding complex systems, I’ve grown both academically and personally. The hands-on projects, group collaborations, and sleepless nights taught me discipline, teamwork, and time management. I discovered my strengths in coding, problem-solving, and system design, which deepened my passion for technology. Despite the pressure, college helped me develop resilience and a clearer vision for my future in the IT industry. These years continue to shape me into a more capable and confident individual, ready to take on real-world tech challenges.                                </p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span class="skill-badge">Web Development</span>
+                                    <span class="skill-badge">UI/UX Design</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Education 2 -->
+                        <div class="education-card">
+                            <div class="flex flex-col gap-4">
+                                <span class="text-sm text-gray-400 dark:text-gray-500">2020 — 2022</span>
+                                <h3 class="text-lg font-bold text-primary">Senior High School • STEM</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    My senior high school years were a time of self-discovery and growth, where I developed my passion for technology and problem-solving. Taking the ICT strand helped me build a strong foundation in computer systems and programming. Transitioning to college as a Bachelor of Science in Information Technology (BSIT) student, I faced new challenges but also exciting opportunities to expand my skills. I learned to balance academics with personal development, exploring various fields like software development, networking, and database management. Both senior high and college have shaped me into a more focused, determined, and tech-driven individual ready for future success.</p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span class="skill-badge">STEM</span>
+                                    <span class="skill-badge">UI/UX Design</span>
+                                    <span class="skill-badge">Design Systems</span>
+                                    <span class="skill-badge">Team Leadership</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Projects Section -->
+                <section id="projects" class="scroll-mt-16 lg:mt-16">
+                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-background/80 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+                        <h2 class="text-sm font-bold uppercase tracking-widest lg:sr-only">
+                            Projects
+                        </h2>
+                    </div>
+                    
+                    <!-- Project 1: Farmers-Co -->
+                    <a href="https://github.com/riadyn-anj/farmers-co" target="_blank" rel="noopener noreferrer" class="block">
+                        <div class="project-card">
+                            <div class="p-4 lg:p-6 flex flex-col lg:flex-row gap-4 lg:gap-6">
+                                <div class="w-full lg:w-1/3">
+                                    <div class="bg-gray-200 dark:bg-gray-800 rounded-lg aspect-video overflow-hidden">
+                                        <img src="https://i.ibb.co/0R2gvgsC/462549484-2347337472269936-5193399098055966192-n.png" alt="Farmers-Co Project" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <div class="w-full lg:w-2/3">
+                                    <h3 class="text-lg font-bold text-primary flex items-center">
+                                        Farmers & Co.
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 inline-block transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                        </svg>
+                                    </h3>
+                                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                                        An agricultural e-commerce platform connecting farmers directly with consumers. Features include product listings, user authentication, shopping cart functionality, and secure checkout process.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap">
+                                        <span class="skill-badge">HTML</span>
+                                        <span class="skill-badge">CSS</span>
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">React</span>
+                                        <span class="skill-badge">Node.js</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- Project 2: Landing Page -->
+                    <a href="https://riadyn-anj.github.io/Landing/" target="_blank" rel="noopener noreferrer" class="block">
+                        <div class="project-card">
+                            <div class="p-4 lg:p-6 flex flex-col lg:flex-row gap-4 lg:gap-6">
+                                <div class="w-full lg:w-1/3">
+                                    <div class="bg-gray-200 dark:bg-gray-800 rounded-lg aspect-video overflow-hidden">
+                                        <img src="https://i.ibb.co/SXD39VyM/image.png" alt="Landing Page Project" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <div class="w-full lg:w-2/3">
+                                    <h3 class="text-lg font-bold text-primary flex items-center">
+                                        React.js Portfolio
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 inline-block transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                        </svg>
+                                    </h3>
+                                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                                        A modern, responsive landing page designed to showcase products or services. Features smooth animations, optimized performance, and cross-browser compatibility for an excellent user experience.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap">
+                                        <span class="skill-badge">Java</span>
+                                        <span class="skill-badge">Responsive Design</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- Project 3: Bookworm Game -->
+                    <a href="https://github.com/riadyn-anj/bookworm" target="_blank" rel="noopener noreferrer" class="block">
+                        <div class="project-card">
+                            <div class="p-4 lg:p-6 flex flex-col lg:flex-row gap-4 lg:gap-6">
+                                <div class="w-full lg:w-1/3">
+                                    <div class="bg-gray-200 dark:bg-gray-800 rounded-lg aspect-video overflow-hidden">
+                                        <img src="https://i.ibb.co/S7vSv4t1/image.png" alt="Bookworm Game" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <div class="w-full lg:w-2/3">
+                                    <h3 class="text-lg font-bold text-primary flex items-center">
+                                        Bookworm Game
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 inline-block transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                        </svg>
+                                    </h3>
+                                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                                        An interactive word game that challenges players to form words from a given set of letters. Features include score tracking, difficulty levels, and a responsive design that works on both desktop and mobile devices.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap">
+                                        <span class="skill-badge">Java</span>
+                                        <span class="skill-badge">Game Development</span>
+                                        <span class="skill-badge">Audio API</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </section>
+                
+                <!-- Skills Section -->
+                <section id="skills" class="scroll-mt-16 lg:mt-16">
+                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-background/80 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+                        <h2 class="text-sm font-bold uppercase tracking-widest lg:sr-only">
+                            Skills
+                        </h2>
+                    </div>
+                    
+                    <div class="lg:px-6">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Frontend Development</h3>
+                            <div class="flex flex-wrap">
+                                <span class="skill-badge">HTML5</span>
+                                <span class="skill-badge">CSS3</span>
+                                <span class="skill-badge">JavaScript (ES6+)</span>
+                                <span class="skill-badge">TypeScript</span>
+                                <span class="skill-badge">React</span>
+                                <span class="skill-badge">Tailwind CSS</span>
+                                <span class="skill-badge">Bootstrap</span>
+                                <span class="skill-badge">Responsive Design</span>
+                                <span class="skill-badge">Web Accessibility</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Backend Development</h3>
+                            <div class="flex flex-wrap">
+                                <span class="skill-badge">Node.js</span>
+                                <span class="skill-badge">Express</span>
+                                <span class="skill-badge">MongoDB</span>
+                                <span class="skill-badge">SQL</span>
+                                <span class="skill-badge">Firebase</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Tools & Technologies</h3>
+                            <div class="flex flex-wrap">
+                                <span class="skill-badge">Git & GitHub</span>
+                                <span class="skill-badge">VS Code</span>
+                                <span class="skill-badge">npm/yarn</span>
+                                <span class="skill-badge">Figma</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">Soft Skills</h3>
+                            <div class="flex flex-wrap">
+                                <span class="skill-badge">Problem Solving</span>
+                                <span class="skill-badge">Team Collaboration</span>
+                                <span class="skill-badge">Communication</span>
+                                <span class="skill-badge">Time Management</span>
+                                <span class="skill-badge">Adaptability</span>
+                                <span class="skill-badge">Attention to Detail</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Contact Section -->
+                <section id="contact" class="scroll-mt-16 lg:mt-16">
+                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-background/80 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+                        <h2 class="text-sm font-bold uppercase tracking-widest lg:sr-only">
+                            Contact
+                        </h2>
+                    </div>
+                    
+                    <div class="lg:px-6">
+                        <!-- Get In Touch heading and description -->
+                        <div class="flex flex-col gap-4 mb-8">
+                            <h2 class="lg:block hidden text-5xl font-bold lg:text-start text-gray-800 dark:text-white">
+                                Get In Touch
+                            </h2>
+                            <p class="lg:text-lg text-gray-600 dark:text-gray-400 mb-4">
+                                If you're considering my contribution, have a question, or just want to say hi, you can count on hearing back from me!
+                            </p>
+                        </div>
+                        
+                        <!-- Contact button with hover effect -->
+                        <div class="flex justify-center lg:justify-start mb-8">
+                            <a href="mailto:ralaquite@addu.edu.ph" class="inline-block">
+                                <div
+                                    class="overflow-hidden before:ease-in-out after:ease-in-out bg-white dark:bg-gray-800 group cursor-pointer relative flex flex-col gap-4 justify-between rounded-2xl border hover:after:w-full border-gray-200 dark:border-gray-700 hover:border-primary duration-300 p-4 md:p-6 px-8 before:h-full before:w-2 hover:before:w-full after:absolute after:top-0 after:left-0 after:h-full after:w-0 after:duration-300 after:opacity-5 after:bg-[url('https://s3-alpha-sig.figma.com/img/6956/4aec/59afa93303a34a23ecc13368dc4094db?Expires=1717977600&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=PFrwNwC7QeqlIUsWFsC-jbQzlVTUSh7T5VfJ9vMNaAEsoOS92kRDH-OjWcAX~dmuZ77fPWjZJX0v1kXaZENeqa--USg1BcCN8z~Z1id5y5RQT1ZTU5OR4PRrLISHbowyTAu65h2jCKOSYXCrXN3F6fH8epD-Pm9TCGCYvD9svkhnbTSZxPKZhn8okHm7W~3wWyIhJBaZyQ30qWwD~JAh5r0BRE6XIfIpgTlUWeLq9wwCbwFZQR5RWInuHUfLrfhvAnxmzVVoTO1TxyjHOeXVb68Tc~nJuypwlDmcd0Sg02sJu3-uj7vFXRul6qw0LRfsQrWS5c5RJ~P-z5-eS~1jTA__')] before:duration-300 before:-z-1 before:bg-primary before:absolute before:top-0 before:left-0"
+                                >
+                                    <span class="text-gray-800 dark:text-gray-200 group-hover:z-[5] px-5 font-medium duration-300 group-hover:text-white mt-auto flex items-center gap-2 text-sm xl:text-base">
+                                        Contact Me!
+                                        <svg
+                                            class="w-4 h-4"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+                                                stroke-linejoin="round"
+                                                stroke-linecap="round"
+                                            ></path>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                
+                <!-- Footer -->
+                <footer class="mt-16 lg:px-6">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Designed and built by Riadyn Laquite. Coded in
+                        <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Visual Studio Code</a>.
+                        Built with
+                        <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Tailwind CSS</a>.
+                    </p>
+                </footer>
+            </main>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Loader with greetings in different languages
+        document.addEventListener('DOMContentLoaded', () => {
+            const loaderOverlay = document.getElementById('loader-overlay');
+            const greetingElement = document.getElementById('greeting');
+            const mainContent = document.getElementById('main-content');
+            
+            // Array of greetings in different languages
+            const greetings = [
+                'Hello', // English
+                'Hola', // Spanish
+                'Bonjour', // French
+                'Ciao', // Italian
+                'Hallo', // German
+                'Olá', // Portuguese
+                'Привет', // Russian
+                'こんにちは', // Japanese
+                '안녕하세요', // Korean
+                '你好', // Chinese
+                'नमस्ते', // Hindi
+                'مرحبا', // Arabic
+                'Γεια σας', // Greek
+                'Merhaba', // Turkish
+                'Xin chào', // Vietnamese
+                'Sawubona', // Zulu
+                'Jambo', // Swahili
+                'Hej', // Swedish
+                'Kumusta', // Filipino
+                'Welcome' // English (final greeting)
+            ];
+            
+            // Calculate timing for each greeting to ensure total animation is 7 seconds
+            // Last greeting (Welcome) will stay for 1 second
+            const totalAnimationTime = 4000; // 7 seconds in milliseconds
+            const finalGreetingTime = 1000; // 1 second for 'Welcome'
+            const timeForOtherGreetings = totalAnimationTime - finalGreetingTime;
+            
+            // Function to display greetings with increasing speed
+            const displayGreetings = async () => {
+                // Time decreases with each greeting to create acceleration effect
+                for (let i = 0; i < greetings.length - 1; i++) {
+                    // Calculate display time for current greeting (decreasing with each iteration)
+                    // First greeting shows longer, gradually speeding up
+                    const progress = i / (greetings.length - 1);
+                    // Exponential decrease in time (starts slow, gets faster)
+                    const displayTime = timeForOtherGreetings * (1 - Math.pow(progress, 2)) / (greetings.length - 1);
+                    
+                    // Display current greeting
+                    greetingElement.textContent = greetings[i];
+                    greetingElement.style.opacity = '1';
+                    
+                    // Wait for calculated time
+                    await new Promise(resolve => setTimeout(resolve, displayTime));
+                    
+                    // Fade out current greeting
+                    greetingElement.style.opacity = '0';
+                    await new Promise(resolve => setTimeout(resolve, 100)); // Short transition between greetings
+                }
+                
+                // Display final 'Welcome' greeting for 1 second
+                greetingElement.textContent = greetings[greetings.length - 1];
+                greetingElement.style.opacity = '1';
+                
+                // Wait for 1 second
+                await new Promise(resolve => setTimeout(resolve, finalGreetingTime));
+                
+                // Fade out loader and fade in main content
+                loaderOverlay.style.opacity = '0';
+                mainContent.style.opacity = '1';
+                
+                // Remove loader from DOM after transition completes
+                setTimeout(() => {
+                    loaderOverlay.style.display = 'none';
+                }, 1000);
+            };
+            
+            // Start the greeting animation
+            displayGreetings();
+        });
+        
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('#theme-toggle input');
+        
+        // Check for saved theme preference or use the system preference
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggle.checked = true;
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggle.checked = false;
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Mouse aura effect
+        const aura = document.getElementById('aura');
+        
+        function updateAuraPosition(e) {
+            if (aura) {
+                aura.style.setProperty('--mouse-x', `${e.clientX}px`);
+                aura.style.setProperty('--mouse-y', `${e.clientY}px`);
+            }
+        }
+        
+        window.addEventListener('pointermove', updateAuraPosition);
+        
+        // Intersection Observer for active section highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navItems = document.querySelectorAll('nav a');
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.7
+        };
+        
+        function handleIntersection(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeId = entry.target.id;
+                    
+                    // Update navigation indicators
+                    navItems.forEach(item => {
+                        const href = item.getAttribute('href').substring(1);
+                        const indicator = item.querySelector('.nav-indicator');
+                        const text = item.querySelector('span:last-child');
+                        
+                        if (href === activeId) {
+                            indicator.classList.add('active');
+                            text.classList.remove('text-gray-500', 'dark:text-gray-400');
+                            text.classList.add('text-gray-800', 'dark:text-gray-200');
+                        } else {
+                            indicator.classList.remove('active');
+                            text.classList.remove('text-gray-800', 'dark:text-gray-200');
+                            text.classList.add('text-gray-500', 'dark:text-gray-400');
+                        }
+                    });
+                }
+            });
+        }
+        
+        const observer = new IntersectionObserver(handleIntersection, observerOptions);
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
